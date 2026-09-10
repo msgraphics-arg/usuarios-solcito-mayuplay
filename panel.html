@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi panel — Solcito Mayu Play</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0910;
+    --card: #131019;
+    --glow: rgba(168, 85, 247, 0.18);
+    --violeta: #8b5cf6;
+    --magenta: #c026d3;
+    --teal: #2dd4bf;
+    --texto: #f3f0fa;
+    --texto-suave: #9d95b3;
+    --error: #f87171;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    font-family: 'Baloo 2', sans-serif;
+    color: var(--texto);
+    padding: 20px 16px 48px;
+  }
+
+  .contenedor {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* ---------- Header ---------- */
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .logo {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--violeta), var(--magenta));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  .header h1 {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .header p {
+    font-size: 13px;
+    color: var(--texto-suave);
+    margin: 2px 0 0;
+  }
+
+  /* ---------- Tarjetas ---------- */
+
+  .tarjeta {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 0 30px var(--glow), 0 0 0 1px rgba(168, 85, 247, 0.12);
+    margin-bottom: 16px;
+  }
+
+  .tarjeta h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--texto-suave);
+    margin: 0 0 14px;
+  }
+
+  /* ---------- Puntos ---------- */
+
+  .puntos-numero {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--violeta), var(--magenta));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .puntos-label {
+    font-size: 13px;
+    color: var(--texto-suave);
+    margin-top: 6px;
+  }
+
+  /* ---------- Racha ---------- */
+
+  .racha-fila {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .racha-dia {
+    flex: 1;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--texto-suave);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .racha-dia.completo {
+    background: linear-gradient(135deg, var(--violeta), var(--magenta));
+    color: var(--texto);
+    border-color: transparent;
+  }
+
+  .racha-dia.hoy {
+    box-shadow: 0 0 0 2px var(--teal);
+    color: var(--texto);
+  }
+
+  .racha-texto {
+    font-size: 13px;
+    color: var(--texto-suave);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .racha-texto strong {
+    color: var(--texto);
+  }
+
+  /* ---------- Canje ---------- */
+
+  .canje-fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .canje-texto p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--texto-suave);
+    line-height: 1.5;
+  }
+
+  .badge-pronto {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--teal);
+    background: rgba(45, 212, 191, 0.12);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 6px;
+  }
+
+  .btn-canje {
+    flex-shrink: 0;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: transparent;
+    color: var(--texto-suave);
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: not-allowed;
+  }
+
+  /* ---------- Historial ---------- */
+
+  .historial-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 340px;
+    overflow-y: auto;
+  }
+
+  .historial-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+  }
+
+  .historial-monto {
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .historial-meta {
+    font-size: 12px;
+    color: var(--texto-suave);
+    margin-top: 2px;
+  }
+
+  .historial-ticket {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--teal);
+    background: rgba(45, 212, 191, 0.1);
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .vacio {
+    font-size: 13px;
+    color: var(--texto-suave);
+    text-align: center;
+    padding: 12px 0;
+  }
+
+  /* ---------- Estados globales ---------- */
+
+  .oculto { display: none; }
+
+  .pantalla-mensaje {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .pantalla-mensaje h1 {
+    font-size: 18px;
+    margin: 0 0 8px;
+  }
+
+  .pantalla-mensaje p {
+    font-size: 14px;
+    color: var(--texto-suave);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="contenedor">
+
+  <!-- ESTADO: cargando -->
+  <div id="pantalla-cargando" class="pantalla-mensaje">
+    <h1>Cargando tu panel…</h1>
+    <p>Un momento, por favor.</p>
+  </div>
+
+  <!-- ESTADO: error (sin sesión o sin vínculo) -->
+  <div id="pantalla-error" class="pantalla-mensaje oculto">
+    <h1 id="titulo-error">No pudimos cargar tu panel</h1>
+    <p id="texto-error">Volvé a ingresar desde el link que te compartió tu agente.</p>
+  </div>
+
+  <!-- ESTADO: panel con datos -->
+  <div id="pantalla-panel" class="oculto">
+
+    <div class="header">
+      <div class="logo">M</div>
+      <div>
+        <h1 id="saludo-usuario">Hola</h1>
+        <p>Tu panel · Solcito Mayu Play</p>
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Tus puntos</h2>
+      <div class="puntos-numero" id="valor-puntos">0</div>
+      <p class="puntos-label">Sumás puntos con cada compra y con tu racha semanal.</p>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Racha semanal</h2>
+      <div class="racha-fila" id="racha-dias"></div>
+      <p class="racha-texto" id="racha-texto"></p>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Canjear puntos</h2>
+      <div class="canje-fila">
+        <div class="canje-texto">
+          <span class="badge-pronto">Muy pronto</span>
+          <p>Vas a poder cambiar tus puntos por premios directo desde acá.</p>
+        </div>
+        <button class="btn-canje" disabled>Canjear</button>
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Historial de tickets</h2>
+      <div class="historial-lista" id="lista-historial"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Firebase SDK (versión compat, sin necesidad de build tools) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+
+<script>
+
+  // ============================================================
+  // CONFIGURACIÓN
+  // ============================================================
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDgthIt13AZ8-_7EpMLeitgEbUB2Uvl-zg",
+    authDomain: "solcitomayuplay.firebaseapp.com",
+    projectId: "solcitomayuplay",
+    storageBucket: "solcitomayuplay.firebasestorage.app",
+    messagingSenderId: "520969972417",
+    appId: "1:520969972417:web:026b571c0f15ea2b5a0240"
+  };
+
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQWh476V_x8VZpvdlF7Tzh-U7C8xci0fHB-hnnm6Tt_MfnNotcz5bTEE3_-WZPpDan/exec";
+
+  // Página de activación, adonde mandamos a quien no tiene sesión
+  const ACTIVACION_URL = "index.html";
+
+  // ============================================================
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  const pantallas = {
+    cargando: document.getElementById('pantalla-cargando'),
+    error: document.getElementById('pantalla-error'),
+    panel: document.getElementById('pantalla-panel')
+  };
+
+  function mostrarPantalla(nombre) {
+    Object.values(pantallas).forEach(p => p.classList.add('oculto'));
+    pantallas[nombre].classList.remove('oculto');
+  }
+
+  async function llamarBackend(accion, datos) {
+    const respuesta = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ accion: accion, ...datos })
+    });
+    return respuesta.json();
+  }
+
+  // ------------------------------------------------------------
+  // Punto de entrada: esperamos a que Firebase confirme la sesión
+  // ------------------------------------------------------------
+
+  auth.onAuthStateChanged(async (user) => {
+
+    if (!user) {
+      window.location.href = ACTIVACION_URL;
+      return;
+    }
+
+    try {
+
+      const resultado = await llamarBackend('resumenCliente', { uid: user.uid });
+
+      if (!resultado.ok) {
+        document.getElementById('texto-error').textContent = resultado.error;
+        mostrarPantalla('error');
+        return;
+      }
+
+      renderizarPanel(resultado);
+      mostrarPantalla('panel');
+
+    } catch (e) {
+      document.getElementById('titulo-error').textContent = 'No pudimos conectar con el servidor';
+      document.getElementById('texto-error').textContent = 'Revisá tu conexión y volvé a intentar en un momento.';
+      mostrarPantalla('error');
+    }
+
+  });
+
+  // ------------------------------------------------------------
+  // Render de los datos del cliente
+  // ------------------------------------------------------------
+
+  function renderizarPanel(datos) {
+
+    document.getElementById('saludo-usuario').textContent = 'Hola, ' + datos.usuario;
+    document.getElementById('valor-puntos').textContent = Number(datos.puntos || 0).toLocaleString('es-AR');
+
+    renderizarRacha(datos.rachaActual || 0, datos.fechaUltimaCompra);
+    renderizarHistorial(datos.historial || []);
+
+  }
+
+  function renderizarRacha(racha, fechaUltimaCompra) {
+
+    const contenedor = document.getElementById('racha-dias');
+    contenedor.innerHTML = '';
+
+    for (let dia = 1; dia <= 7; dia++) {
+      const el = document.createElement('div');
+      el.className = 'racha-dia';
+      if (dia <= racha) el.classList.add('completo');
+      if (dia === racha && racha > 0) el.classList.add('hoy');
+      el.textContent = dia;
+      contenedor.appendChild(el);
+    }
+
+    const textoEl = document.getElementById('racha-texto');
+
+    if (racha <= 0) {
+      textoEl.innerHTML = 'Todavía no arrancaste tu racha de la semana. Tu próxima compra suma el <strong>día 1</strong>.';
+      return;
+    }
+
+    if (racha >= 7) {
+      textoEl.innerHTML = '¡Racha completa! Estás en el <strong>día 7 de 7</strong>. Tu próxima compra arranca una nueva racha.';
+      return;
+    }
+
+    textoEl.innerHTML = 'Vas por el <strong>día ' + racha + ' de 7</strong>. Comprá mañana para no perder la racha.';
+
+  }
+
+  function renderizarHistorial(tickets) {
+
+    const contenedor = document.getElementById('lista-historial');
+    contenedor.innerHTML = '';
+
+    if (!tickets.length) {
+      const vacio = document.createElement('p');
+      vacio.className = 'vacio';
+      vacio.textContent = 'Todavía no tenés tickets registrados.';
+      contenedor.appendChild(vacio);
+      return;
+    }
+
+    tickets.forEach((t) => {
+
+      const item = document.createElement('div');
+      item.className = 'historial-item';
+
+      const fecha = t.fecha ? new Date(t.fecha) : null;
+      const fechaTexto = fecha
+        ? fecha.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit' })
+        : '';
+
+      item.innerHTML =
+        '<div>' +
+          '<div class="historial-monto">$' + Number(t.monto || 0).toLocaleString('es-AR') + '</div>' +
+          '<div class="historial-meta">' + fechaTexto + ' · ' + (t.canal || '') + '</div>' +
+        '</div>' +
+        '<div class="historial-ticket">#' + t.ticket + '</div>';
+
+      contenedor.appendChild(item);
+
+    });
+
+  }
+
+</script>
+
+</body>
+</html>
