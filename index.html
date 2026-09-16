@@ -1,1 +1,536 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Activar cuenta — Solcito Mayu Play</title><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png" type="image/png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#07060b"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Mayu Play"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Unbounded:wght@500;700;800&display=swap"><style>:root{--bg:#07060b;--purple:#a855f7;--purple2:#d8b4fe;--teal:#22d3ee;--texto:#faf8ff;--texto-suave:#aaa3b4;--error:#ff707c}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 0,#29113e 0,#08070c 38%);font-family:Inter,Arial,sans-serif;color:var(--texto);padding:24px}.tarjeta{position:relative;width:100%;max-width:380px;background:linear-gradient(145deg,#1b1522,#0b0910);border:3px solid rgba(255,255,255,.75);border-radius:20px;padding:32px 28px;box-shadow:0 0 24px rgba(168,85,247,.1),inset 0 0 25px rgba(255,255,255,.2);text-align:center}.tarjeta::after{content:"";position:absolute;inset:-2px;border-radius:21px;animation:pulso-glow 3.2s ease-in-out infinite;pointer-events:none}@keyframes pulso-glow{0%,100%{box-shadow:0 0 12px rgba(168,85,247,.2)}50%{box-shadow:0 0 36px rgba(168,85,247,.6)}}.logo{width:64px;height:64px;margin:0 auto 18px;border-radius:16px;background:#15151b;border:2px solid #ccc;box-shadow:0 0 22px rgba(168,85,247,.3);display:flex;align-items:center;justify-content:center;font-family:Unbounded,sans-serif;font-size:28px;font-weight:700;color:var(--texto);text-shadow:0 0 12px rgba(168,85,247,.9),0 0 22px rgba(168,85,247,.4)}h1{font-family:Unbounded,sans-serif;font-size:19px;font-weight:700;margin:0 0 6px}p.sub{color:var(--texto-suave);font-size:13px;margin:0 0 28px;line-height:1.5}.usuario-pill{display:inline-block;padding:10px 20px;border-radius:999px;background:linear-gradient(135deg,#7c3aed,var(--purple));border:2px solid #dfc1ff;font-family:Unbounded,sans-serif;font-weight:700;font-size:16px;margin-bottom:28px}.btn{width:100%;padding:13px;border-radius:11px;border:2px solid #aaaab4;font-family:Inter,sans-serif;font-weight:800;font-size:15px;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .15s ease,opacity .15s ease}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}.btn-google{background:#fff;color:#1f1f1f;border-color:#fff}.btn-telefono{background:linear-gradient(145deg,#28232e,#111017);color:var(--texto);border-color:var(--teal)}.btn-primario{background:linear-gradient(135deg,#7c3aed,var(--purple));color:#fff;border-color:#dfc1ff}input[type=tel],input[type=text]{width:100%;padding:12px 16px;border-radius:11px;border:1px solid #504b58;background:#09080d;color:var(--texto);font-family:Inter,sans-serif;font-size:15px;margin-bottom:12px;text-align:center}input:focus{outline:0;border-color:var(--purple2);box-shadow:0 0 0 3px rgba(168,85,247,.12)}input::placeholder{color:var(--texto-suave)}.volver{background:0 0;border:none;color:var(--texto-suave);font-family:Inter,sans-serif;font-size:13px;cursor:pointer;margin-top:4px;text-decoration:underline}.oculto{display:none}.estado-texto{font-size:14px;color:var(--texto-suave)}.estado-error{color:var(--error);font-size:14px;margin-top:14px}.check-exito{width:56px;height:56px;margin:0 auto 18px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#14b8a6);display:flex;align-items:center;justify-content:center;font-size:28px}#recaptcha-container{margin-bottom:12px}</style></head><body><div class="tarjeta"><div class="logo">S</div><div id="pantalla-cargando"><h1>Verificando invitación…</h1><p class="sub estado-texto">Un momento, por favor.</p></div><div id="pantalla-error" class="oculto"><h1>No pudimos verificar tu link</h1><p class="sub" id="texto-error">Este link de invitación no es válido.</p><p class="sub estado-texto">Pedile a tu agente que te envíe un link nuevo.</p></div><div id="pantalla-login" class="oculto"><h1>Activá tu cuenta</h1><p class="sub">Confirmá tu usuario y elegí cómo querés ingresar de ahora en adelante.</p><div class="usuario-pill" id="nombre-usuario">usuario</div><button class="btn btn-google" id="btn-google">Continuar con Google</button> <button class="btn btn-telefono" id="btn-telefono">Continuar con mi número</button><p class="estado-error oculto" id="error-login"></p></div><div id="pantalla-telefono" class="oculto"><h1>Ingresá tu número</h1><p class="sub">Te vamos a mandar un código por SMS para confirmar.</p><input type="tel" id="input-telefono" placeholder="+54 9 351 123 4567"><div id="recaptcha-container"></div><button class="btn btn-primario" id="btn-enviar-codigo">Enviar código</button> <button class="volver" id="btn-volver-1">Volver</button><p class="estado-error oculto" id="error-telefono"></p></div><div id="pantalla-codigo" class="oculto"><h1>Ingresá el código</h1><p class="sub">Te llegó un SMS con un código de 6 dígitos.</p><input type="text" id="input-codigo-sms" placeholder="123456" maxlength="6" inputmode="numeric"> <button class="btn btn-primario" id="btn-confirmar-codigo">Confirmar</button> <button class="volver" id="btn-volver-2">Volver</button><p class="estado-error oculto" id="error-codigo"></p></div><div id="pantalla-exito" class="oculto"><div class="check-exito">✓</div><h1>¡Cuenta activada!</h1><p class="sub" id="texto-exito">Te estamos llevando a tu panel en <span id="contador-redirect">5</span>...</p><button class="btn btn-primario" id="btn-ir-panel">Ir a mi panel ahora</button></div></div><script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script><script>const firebaseConfig={apiKey:"AIzaSyDgthIt13AZ8-_7EpMLeitgEbUB2Uvl-zg",authDomain:"solcitomayuplay.firebaseapp.com",projectId:"solcitomayuplay",storageBucket:"solcitomayuplay.firebasestorage.app",messagingSenderId:"520969972417",appId:"1:520969972417:web:026b571c0f15ea2b5a0240"},APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbyQWh476V_x8VZpvdlF7Tzh-U7C8xci0fHB-hnnm6Tt_MfnNotcz5bTEE3_-WZPpDan/exec",PANEL_URL="panel.html";firebase.initializeApp(firebaseConfig),"serviceWorker"in navigator&&navigator.serviceWorker.register("service-worker.js").catch(()=>{});const auth=firebase.auth(),params=new URLSearchParams(window.location.search),codigo=params.get("codigo");let usuarioActual=null,confirmationResult=null;const pantallas={cargando:document.getElementById("pantalla-cargando"),error:document.getElementById("pantalla-error"),login:document.getElementById("pantalla-login"),telefono:document.getElementById("pantalla-telefono"),codigoSms:document.getElementById("pantalla-codigo"),exito:document.getElementById("pantalla-exito")};function mostrarPantalla(e){Object.values(pantallas).forEach(e=>e.classList.add("oculto")),pantallas[e].classList.remove("oculto")}async function llamarBackend(e,t){return(await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify({accion:e,...t})})).json()}async function validarCodigo(){if(!codigo)return document.getElementById("texto-error").textContent="Falta el código de invitación en el link.",void mostrarPantalla("error");try{const e=await llamarBackend("validarCodigoInvitacion",{codigo:codigo});if(!e.ok)return document.getElementById("texto-error").textContent=e.error,void mostrarPantalla("error");usuarioActual=e.usuario,document.getElementById("nombre-usuario").textContent=usuarioActual,mostrarPantalla("login")}catch(e){document.getElementById("texto-error").textContent="No pudimos conectar con el servidor. Probá de nuevo en un momento.",mostrarPantalla("error")}}async function confirmarActivacionEnBackend(e,t){try{const o=await llamarBackend("confirmarActivacion",{codigo:codigo,usuario:usuarioActual,uid:e,metodo:t});if(!o.ok)return document.getElementById("texto-error").textContent=o.error,void mostrarPantalla("error");redirigirAlPanel()}catch(e){document.getElementById("texto-error").textContent="Tu cuenta de Google/teléfono se vinculó, pero hubo un problema al guardar los datos. Contactá a tu agente.",mostrarPantalla("error")}}function redirigirAlPanel(){mostrarPantalla("exito");let e=5;const t=document.getElementById("contador-redirect"),o=setInterval(()=>{e-=1,t&&(t.textContent=e),e<=0&&(clearInterval(o),window.location.href=PANEL_URL)},1e3)}validarCodigo(),document.getElementById("btn-google").addEventListener("click",async()=>{const e=document.getElementById("error-login");e.classList.add("oculto");try{const e=new firebase.auth.GoogleAuthProvider,t=await auth.signInWithPopup(e);await confirmarActivacionEnBackend(t.user.uid,"google")}catch(t){e.textContent="No se pudo completar el ingreso con Google. Probá de nuevo.",e.classList.remove("oculto")}}),document.getElementById("btn-telefono").addEventListener("click",()=>{mostrarPantalla("telefono"),window.recaptchaVerifier||(window.recaptchaVerifier=new firebase.auth.RecaptchaVerifier("recaptcha-container",{size:"normal"}))}),document.getElementById("btn-volver-1").addEventListener("click",()=>{mostrarPantalla("login")}),document.getElementById("btn-enviar-codigo").addEventListener("click",async()=>{const e=document.getElementById("error-telefono");e.classList.add("oculto");const t=document.getElementById("input-telefono").value.trim();if(!t)return e.textContent="Ingresá tu número de teléfono.",void e.classList.remove("oculto");try{confirmationResult=await auth.signInWithPhoneNumber(t,window.recaptchaVerifier),mostrarPantalla("codigoSms")}catch(t){e.textContent="No se pudo enviar el código. Revisá el número e intentá de nuevo.",e.classList.remove("oculto")}}),document.getElementById("btn-volver-2").addEventListener("click",()=>{mostrarPantalla("telefono")}),document.getElementById("btn-confirmar-codigo").addEventListener("click",async()=>{const e=document.getElementById("error-codigo");e.classList.add("oculto");const t=document.getElementById("input-codigo-sms").value.trim();if(!t)return e.textContent="Ingresá el código que te llegó por SMS.",void e.classList.remove("oculto");try{const e=await confirmationResult.confirm(t);await confirmarActivacionEnBackend(e.user.uid,"telefono")}catch(t){e.textContent="El código ingresado no es correcto.",e.classList.remove("oculto")}}),document.getElementById("btn-ir-panel").addEventListener("click",()=>{window.location.href=PANEL_URL})</script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activar cuenta — Solcito Mayu Play</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#07060b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mayu Play">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Unbounded:wght@500;700;800&display=swap">
+<style>
+  :root {
+    --bg: #07060b;
+    --purple: #a855f7;
+    --purple2: #d8b4fe;
+    --teal: #22d3ee;
+    --texto: #faf8ff;
+    --texto-suave: #aaa3b4;
+    --error: #ff707c;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 0, #29113e 0, #08070c 38%);
+    font-family: 'Inter', Arial, sans-serif;
+    color: var(--texto);
+    padding: 24px;
+  }
+
+  .tarjeta {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    background: linear-gradient(145deg, #1b1522, #0b0910);
+    border: 3px solid rgba(255, 255, 255, 0.75);
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 0 24px rgba(168, 85, 247, 0.1), inset 0 0 25px rgba(255, 255, 255, 0.2);
+    text-align: center;
+  }
+
+  .tarjeta::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 21px;
+    animation: pulso-glow 3.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes pulso-glow {
+    0%, 100% { box-shadow: 0 0 12px rgba(168, 85, 247, 0.2); }
+    50% { box-shadow: 0 0 36px rgba(168, 85, 247, 0.6); }
+  }
+
+  .logo {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 16px;
+    background: #15151b;
+    border: 2px solid #ccc;
+    box-shadow: 0 0 22px rgba(168, 85, 247, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--texto);
+    text-shadow: 0 0 12px rgba(168, 85, 247, 0.9), 0 0 22px rgba(168, 85, 247, 0.4);
+  }
+
+  h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  p.sub {
+    color: var(--texto-suave);
+    font-size: 13px;
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+
+  .usuario-pill {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #7c3aed, var(--purple));
+    border: 2px solid #dfc1ff;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 28px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 11px;
+    border: 2px solid #aaaab4;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-google {
+    background: #fff;
+    color: #1f1f1f;
+    border-color: #fff;
+  }
+
+  .btn-telefono {
+    background: linear-gradient(145deg, #28232e, #111017);
+    color: var(--texto);
+    border-color: var(--teal);
+  }
+
+  .btn-primario {
+    background: linear-gradient(135deg, #7c3aed, var(--purple));
+    color: #fff;
+    border-color: #dfc1ff;
+  }
+
+  input[type="tel"], input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 11px;
+    border: 1px solid #504b58;
+    background: #09080d;
+    color: var(--texto);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  input:focus { outline: 0; border-color: var(--purple2); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12); }
+  input::placeholder { color: var(--texto-suave); }
+
+  .volver {
+    background: none;
+    border: none;
+    color: var(--texto-suave);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 4px;
+    text-decoration: underline;
+  }
+
+  .oculto { display: none; }
+
+  .estado-texto {
+    font-size: 14px;
+    color: var(--texto-suave);
+  }
+
+  .estado-error {
+    color: var(--error);
+    font-size: 14px;
+    margin-top: 14px;
+  }
+
+  .check-exito {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), #14b8a6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+
+  #recaptcha-container { margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<div class="tarjeta">
+
+  <div class="logo">S</div>
+
+  <!-- ESTADO: cargando -->
+  <div id="pantalla-cargando">
+    <h1>Verificando invitación…</h1>
+    <p class="sub estado-texto">Un momento, por favor.</p>
+  </div>
+
+  <!-- ESTADO: código inválido -->
+  <div id="pantalla-error" class="oculto">
+    <h1>No pudimos verificar tu link</h1>
+    <p class="sub" id="texto-error">Este link de invitación no es válido.</p>
+    <p class="sub estado-texto">Pedile a tu agente que te envíe un link nuevo.</p>
+  </div>
+
+  <!-- ESTADO: elegir método de login -->
+  <div id="pantalla-login" class="oculto">
+    <h1>Activá tu cuenta</h1>
+    <p class="sub">Confirmá tu usuario y elegí cómo querés ingresar de ahora en adelante.</p>
+
+    <div class="usuario-pill" id="nombre-usuario">usuario</div>
+
+    <button class="btn btn-google" id="btn-google">
+      Continuar con Google
+    </button>
+
+    <button class="btn btn-telefono" id="btn-telefono">
+      Continuar con mi número
+    </button>
+
+    <p class="estado-error oculto" id="error-login"></p>
+  </div>
+
+  <!-- ESTADO: ingresar teléfono -->
+  <div id="pantalla-telefono" class="oculto">
+    <h1>Ingresá tu número</h1>
+    <p class="sub">Te vamos a mandar un código por SMS para confirmar.</p>
+
+    <input type="tel" id="input-telefono" placeholder="+54 9 351 123 4567">
+
+    <div id="recaptcha-container"></div>
+
+    <button class="btn btn-primario" id="btn-enviar-codigo">Enviar código</button>
+    <button class="volver" id="btn-volver-1">Volver</button>
+
+    <p class="estado-error oculto" id="error-telefono"></p>
+  </div>
+
+  <!-- ESTADO: ingresar código SMS -->
+  <div id="pantalla-codigo" class="oculto">
+    <h1>Ingresá el código</h1>
+    <p class="sub">Te llegó un SMS con un código de 6 dígitos.</p>
+
+    <input type="text" id="input-codigo-sms" placeholder="123456" maxlength="6" inputmode="numeric">
+
+    <button class="btn btn-primario" id="btn-confirmar-codigo">Confirmar</button>
+    <button class="volver" id="btn-volver-2">Volver</button>
+
+    <p class="estado-error oculto" id="error-codigo"></p>
+  </div>
+
+  <!-- ESTADO: activación exitosa -->
+  <div id="pantalla-exito" class="oculto">
+    <div class="check-exito">✓</div>
+    <h1>¡Cuenta activada!</h1>
+    <p class="sub" id="texto-exito">Te estamos llevando a tu panel en <span id="contador-redirect">5</span>...</p>
+    <button class="btn btn-primario" id="btn-ir-panel">Ir a mi panel ahora</button>
+  </div>
+
+</div>
+
+<!-- Firebase SDK (versión compat, sin necesidad de build tools) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+
+<script>
+
+  // ============================================================
+  // CONFIGURACIÓN — reemplazar con tus datos reales
+  // ============================================================
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDgthIt13AZ8-_7EpMLeitgEbUB2Uvl-zg",
+    authDomain: "solcitomayuplay.firebaseapp.com",
+    projectId: "solcitomayuplay",
+    storageBucket: "solcitomayuplay.firebasestorage.app",
+    messagingSenderId: "520969972417",
+    appId: "1:520969972417:web:026b571c0f15ea2b5a0240"
+  };
+
+  // Reemplazá esto por la URL real de tu implementación de Apps Script
+  // (Implementar → Administrar implementaciones → URL de la aplicación web)
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQWh476V_x8VZpvdlF7Tzh-U7C8xci0fHB-hnnm6Tt_MfnNotcz5bTEE3_-WZPpDan/exec";
+
+  // Página del portal a la que se redirige tras activar la cuenta
+  const PANEL_URL = "panel.html";
+
+  // ============================================================
+
+  firebase.initializeApp(firebaseConfig);
+
+  // Registro del service worker (habilita instalación real como PWA)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  }
+  const auth = firebase.auth();
+
+  const params = new URLSearchParams(window.location.search);
+  const codigo = params.get('codigo');
+
+  let usuarioActual = null;
+  let confirmationResult = null;
+
+  const pantallas = {
+    cargando: document.getElementById('pantalla-cargando'),
+    error: document.getElementById('pantalla-error'),
+    login: document.getElementById('pantalla-login'),
+    telefono: document.getElementById('pantalla-telefono'),
+    codigoSms: document.getElementById('pantalla-codigo'),
+    exito: document.getElementById('pantalla-exito')
+  };
+
+  function mostrarPantalla(nombre) {
+    Object.values(pantallas).forEach(p => p.classList.add('oculto'));
+    pantallas[nombre].classList.remove('oculto');
+  }
+
+  async function llamarBackend(accion, datos) {
+    const respuesta = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ accion: accion, ...datos })
+    });
+    return respuesta.json();
+  }
+
+  // ------------------------------------------------------------
+  // Paso 1: validar el código apenas carga la página
+  // ------------------------------------------------------------
+
+  async function validarCodigo() {
+
+    if (!codigo) {
+      document.getElementById('texto-error').textContent =
+        'Falta el código de invitación en el link.';
+      mostrarPantalla('error');
+      return;
+    }
+
+    try {
+
+      const resultado = await llamarBackend('validarCodigoInvitacion', { codigo: codigo });
+
+      if (!resultado.ok) {
+        document.getElementById('texto-error').textContent = resultado.error;
+        mostrarPantalla('error');
+        return;
+      }
+
+      usuarioActual = resultado.usuario;
+      document.getElementById('nombre-usuario').textContent = usuarioActual;
+      mostrarPantalla('login');
+
+    } catch (e) {
+      document.getElementById('texto-error').textContent =
+        'No pudimos conectar con el servidor. Probá de nuevo en un momento.';
+      mostrarPantalla('error');
+    }
+
+  }
+
+  validarCodigo();
+
+  // ------------------------------------------------------------
+  // Paso 2a: login con Google
+  // ------------------------------------------------------------
+
+  document.getElementById('btn-google').addEventListener('click', async () => {
+
+    const errorEl = document.getElementById('error-login');
+    errorEl.classList.add('oculto');
+
+    try {
+
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const resultado = await auth.signInWithPopup(provider);
+
+      await confirmarActivacionEnBackend(resultado.user.uid, 'google');
+
+    } catch (e) {
+      errorEl.textContent = 'No se pudo completar el ingreso con Google. Probá de nuevo.';
+      errorEl.classList.remove('oculto');
+    }
+
+  });
+
+  // ------------------------------------------------------------
+  // Paso 2b: login con teléfono
+  // ------------------------------------------------------------
+
+  document.getElementById('btn-telefono').addEventListener('click', () => {
+    mostrarPantalla('telefono');
+
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        size: 'normal'
+      });
+    }
+  });
+
+  document.getElementById('btn-volver-1').addEventListener('click', () => {
+    mostrarPantalla('login');
+  });
+
+  document.getElementById('btn-enviar-codigo').addEventListener('click', async () => {
+
+    const errorEl = document.getElementById('error-telefono');
+    errorEl.classList.add('oculto');
+
+    const numero = document.getElementById('input-telefono').value.trim();
+
+    if (!numero) {
+      errorEl.textContent = 'Ingresá tu número de teléfono.';
+      errorEl.classList.remove('oculto');
+      return;
+    }
+
+    try {
+
+      confirmationResult = await auth.signInWithPhoneNumber(numero, window.recaptchaVerifier);
+      mostrarPantalla('codigoSms');
+
+    } catch (e) {
+      errorEl.textContent = 'No se pudo enviar el código. Revisá el número e intentá de nuevo.';
+      errorEl.classList.remove('oculto');
+    }
+
+  });
+
+  document.getElementById('btn-volver-2').addEventListener('click', () => {
+    mostrarPantalla('telefono');
+  });
+
+  document.getElementById('btn-confirmar-codigo').addEventListener('click', async () => {
+
+    const errorEl = document.getElementById('error-codigo');
+    errorEl.classList.add('oculto');
+
+    const codigoSms = document.getElementById('input-codigo-sms').value.trim();
+
+    if (!codigoSms) {
+      errorEl.textContent = 'Ingresá el código que te llegó por SMS.';
+      errorEl.classList.remove('oculto');
+      return;
+    }
+
+    try {
+
+      const resultado = await confirmationResult.confirm(codigoSms);
+      await confirmarActivacionEnBackend(resultado.user.uid, 'telefono');
+
+    } catch (e) {
+      errorEl.textContent = 'El código ingresado no es correcto.';
+      errorEl.classList.remove('oculto');
+    }
+
+  });
+
+  // ------------------------------------------------------------
+  // Paso 3: confirmar la activación en el backend
+  // ------------------------------------------------------------
+
+  async function confirmarActivacionEnBackend(uid, metodo) {
+
+    try {
+
+      const resultado = await llamarBackend('confirmarActivacion', {
+        codigo: codigo,
+        usuario: usuarioActual,
+        uid: uid,
+        metodo: metodo
+      });
+
+      if (!resultado.ok) {
+        document.getElementById('texto-error').textContent = resultado.error;
+        mostrarPantalla('error');
+        return;
+      }
+
+      redirigirAlPanel();
+
+    } catch (e) {
+      document.getElementById('texto-error').textContent =
+        'Tu cuenta de Google/teléfono se vinculó, pero hubo un problema al guardar los datos. Contactá a tu agente.';
+      mostrarPantalla('error');
+    }
+
+  }
+
+  // ------------------------------------------------------------
+  // Redirección automática al panel tras la activación
+  // ------------------------------------------------------------
+
+  function redirigirAlPanel() {
+
+    mostrarPantalla('exito');
+
+    let segundos = 5;
+    const contadorEl = document.getElementById('contador-redirect');
+
+    const intervalo = setInterval(() => {
+      segundos -= 1;
+      if (contadorEl) contadorEl.textContent = segundos;
+      if (segundos <= 0) {
+        clearInterval(intervalo);
+        window.location.href = PANEL_URL;
+      }
+    }, 1000);
+
+  }
+
+  document.getElementById('btn-ir-panel').addEventListener('click', () => {
+    window.location.href = PANEL_URL;
+  });
+
+</script>
+
+</body>
+</html>
