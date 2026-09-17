@@ -19,14 +19,20 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 // Notificación recibida con la app cerrada o en otra pestaña.
+// Ojo: lee de "data", no de "notification" — así es que se
+// ejecuta este código en vez de que el navegador la muestre
+// sola con su diseño genérico (eso era lo que hacía que
+// apareciera agrupada bajo "Chrome" con un ícono gris).
 messaging.onBackgroundMessage((payload) => {
 
-  const titulo = (payload.notification && payload.notification.title) || 'Solcito Mayu Play';
+  const datos = payload.data || {};
+  const titulo = datos.title || 'Solcito Mayu Play';
 
   const opciones = {
-    body: (payload.notification && payload.notification.body) || '',
+    body: datos.body || '',
     icon: 'icon-192.png',
-    badge: 'icon-192.png'
+    badge: 'icon-192.png',
+    data: { link: datos.link || 'panel.html' }
   };
 
   self.registration.showNotification(titulo, opciones);
@@ -38,6 +44,8 @@ self.addEventListener('notificationclick', (evento) => {
 
   evento.notification.close();
 
+  const linkDestino = (evento.notification.data && evento.notification.data.link) || 'panel.html';
+
   evento.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((listaClientes) => {
 
@@ -48,7 +56,7 @@ self.addEventListener('notificationclick', (evento) => {
       }
 
       if (clients.openWindow) {
-        return clients.openWindow('panel.html');
+        return clients.openWindow(linkDestino);
       }
 
     })
